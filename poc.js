@@ -59,6 +59,30 @@ function listFiles(auth) {
 
   // setTimeout(download, 10000, 'download');
 
+  function ind_download(file_id, file_type){
+
+    if (fileId != null) {
+      var dest = fs.createWriteStream(`${fileId}` + '.' + `${file_type}`);
+      drive.files.get({
+          fileId: fileId,
+          alt: 'media'
+        }, {
+          responseType: 'stream'
+        },
+        function (err, res) {
+          res.data
+            .on('end', () => {
+              console.log('[+] Downloaded ' + `${fileId}` + `${file_type}`);
+            })
+            .on('error', err => {
+              console.log('[-] Download Failed ' + `${fileId}` + `${file_type}`, err);
+            })
+            .pipe(dest);
+        }
+      );
+    }
+
+  }
 
 
   function download() {
